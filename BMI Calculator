@@ -1,0 +1,42 @@
+import streamlit as st
+import plotly.express as px
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import time
+
+def calculate_bmi(weight, height, height_unit):
+ # Convert height to meters if needed
+ if height_unit == 'cm':
+ height = height / 100 # Convert cm to meters
+ elif height_unit == 'ft':
+ height = height * 0.3048 # Convert feet to meters
+ bmi = weight / (height ** 2)
+ return bmi
+def get_health_classification(bmi):
+ if bmi < 18.5:
+ return 'Underweight'
+ elif 18.5 <= bmi < 24.9:
+ return 'Healthy weight'
+ elif 25 <= bmi < 29.9:
+ return 'Overweight'
+ else:
+ return 'Obesity'
+# Streamlit user interface
+st.title("BMI Calculator")
+st.write("Enter your details below to calculate your BMI:")
+# Input fields
+weight = st.number_input("Weight (kg)", min_value=1.0, max_value=500.0, step=0.1)
+height = st.number_input("Height", min_value=1.0, max_value=300.0, step=0.1)
+height_unit = st.selectbox("Height Unit", ['cm', 'm', 'ft'])
+if st.button("Calculate BMI"):
+ if weight > 0 and height > 0:
+ bmi = calculate_bmi(weight, height, height_unit)
+ health_status = get_health_classification(bmi)
+ 
+ st.write(f"Your BMI is: {bmi:.2f}")
+ st.write(f"Health Classification: {health_status}")
+ else:
+  st.error("Please enter the valid weight and height.")
+ 
